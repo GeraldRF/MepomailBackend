@@ -12,6 +12,8 @@ RewriteRule ^login$ /Controllers/LoginController.php
 RewriteRule ^correos$ /Controllers/MailController.php
 RewriteRule ^correos/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
 
+RewriteRule ^correos/(recibidos|enviados)/([A-Za-z\d[:punct:]]+)$ /Controllers/MailController.php?solicitud=$1&email=$2
+
 RewriteRule ^desencriptar/([A-Za-z\d]+)$ /Controllers/DecryptController.php?id=$1
 
 RewriteRule ^auto_delete$ /BS/Auto_eliminador.php

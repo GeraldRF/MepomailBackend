@@ -39,6 +39,30 @@ class MailServices
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
 
+    function getReceivedMails($email)
+    {
+        $sql = $this->dbConn->prepare("SELECT * FROM mails WHERE receiver=:email");
+        $sql->bindValue(":email", $email);
+        $sql->execute();
+
+        $sql->setFetchMode(PDO::FETCH_ASSOC);
+
+        return  $sql->fetchAll();
+    }
+
+    function getSentMails($email)
+    {
+        $sql = $this->dbConn->prepare("SELECT * FROM mails WHERE transmitter=:email");
+        $sql->bindValue(":email", $email);
+        $sql->execute();
+
+        $sql->setFetchMode(PDO::FETCH_ASSOC);
+
+        return  $sql->fetchAll();
+    }
+
+    
+
     function deleteMail($id)
     {
         try {
