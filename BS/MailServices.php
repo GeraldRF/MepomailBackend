@@ -39,7 +39,7 @@ class MailServices
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
 
-    function DeleteMail($id)
+    function deleteMail($id)
     {
         try {
             $statement = $this->dbConn->prepare("DELETE FROM mails WHERE id=:id");
@@ -132,7 +132,7 @@ class MailServices
         $body = $desencriptar($mail['body'], $clave, $mail['iv']);
 
         }catch(Exception $e){
-            return ["msg"=> $e->getMessage(), "isDescrypted"=>true];
+            return ["msg"=> $e->getMessage(), "isDescrypted"=>false];
         }
 
         return ["body"=>$body, "msg"=>"Desencriptado", "isDescrypted"=>true];
