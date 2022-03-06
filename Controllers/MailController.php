@@ -13,6 +13,8 @@ $Services = new MailServices();
  */
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
+    include ("../BS/Auto_eliminador.php");
+
     if (isset($_GET['id'])) {
 
         //Mostrar un usuario
