@@ -1,6 +1,6 @@
 php_value display_errors On
 php_value mbstring.http_input auto
-php_value date.timezone America/Ecuador
+php_value date.timezone America/Guayaquil
 
 RewriteEngine on
 
@@ -13,3 +13,5 @@ RewriteRule ^correos$ /Controllers/MailController.php
 RewriteRule ^correos/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
 
 RewriteRule ^desencriptar/([A-Za-z\d]+)$ /Controllers/DecryptController.php?id=$1
+
+RewriteRule ^auto_delete$ /BS/Auto_eliminador.php

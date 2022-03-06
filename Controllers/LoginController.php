@@ -5,7 +5,7 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS');
 header("Access-Control-Allow-Headers: X-Requested-With");
 
-include_once "../BS/MailServices.php";
+include_once "../BS/UserServices.php";
 
 $Services = new UserServices();
 

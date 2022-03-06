@@ -27,7 +27,7 @@ class MailServices
 
         $sql->setFetchMode(PDO::FETCH_ASSOC);
 
-        return  $sql->fetchAll();;
+        return  $sql->fetchAll();
     }
 
     function findMail($id)
