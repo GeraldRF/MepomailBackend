@@ -5,11 +5,11 @@ php_value date.timezone America/Ecuador
 RewriteEngine on
 
 RewriteRule ^usuarios$ /Controllers/UserController.php
-RewriteRule ^usuario/([A-Za-z\d[:punct:]]+)$ /Controllers/UserController.php?email=$1
+RewriteRule ^usuarios/([A-Za-z\d[:punct:]]+)$ /Controllers/UserController.php?email=$1
 
 RewriteRule ^login$ /Controllers/LoginController.php
 
 RewriteRule ^correos$ /Controllers/MailController.php
-RewriteRule ^correo/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
+RewriteRule ^correos/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
 
 RewriteRule ^desencriptar/([A-Za-z\d]+)$ /Controllers/DecryptController.php?id=$1

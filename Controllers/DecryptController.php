@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $response = $Services->decryptMail($_GET['id'], $input['clave']);
 
-    if ($response["isUpdated"]) {
+    if ($response["isDescrypted"]) {
         header("HTTP/1.1 200 OK");
-        echo json_encode($input);
+        echo json_encode($response["body"]);
     } else {
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);   

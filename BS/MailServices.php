@@ -54,7 +54,7 @@ class MailServices
 
     function createMail($input)
     {
-        include "encriptador.php";
+        include "Encriptador.php";
 
         $acepted_id = false;
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -66,23 +66,29 @@ class MailServices
             $result = $this->findMail($id_generated);
 
             if (!isset($result['id'])) {
-                $acepted_id = true;
+                    $acepted_id = true;
             }
+        } while (!$acepted_id);
 
-        } while ($acepted_id);
-
-        $iv = $getIV();
+        $iv = substr($getIV(), 0, 16);
         $body = $encriptar($input['body'], $input['clave'], $iv);
 
         $sql = "INSERT INTO mails 
                 (id, iv, transmitter, receiver, subject, body, has_files, delete_date)
                 VALUES
-                ($id_generated, $iv, :transmitter, :receiver, :subject, $body, :has_files, :delete_date)";
+                (:id, :iv, :transmitter, :receiver, :subject, :body, :has_files, :delete_date)";
 
         try {
 
             $statement = $this->dbConn->prepare($sql);
-            bindAllValues($statement, $input);
+            $statement->bindValue(":id", $id_generated);
+            $statement->bindValue(":iv", $iv);
+            $statement->bindValue(":transmitter", $input['transmitter']);
+            $statement->bindValue(":receiver", $input['receiver']);
+            $statement->bindValue(":subject", $input['subject']);
+            $statement->bindValue(":body", $body);
+            $statement->bindValue(":has_files", $input['has_files']);
+            $statement->bindValue(":delete_date", $input['delete_date']);
 
             $statement->execute();
 
@@ -116,13 +122,19 @@ class MailServices
         }
     }
 
-    function DecryptMail($id, $clave){
-        include "encriptador.php";
+    function DecryptMail($id, $clave)
+    {
+        include "Encriptador.php";
+
+        try{
 
         $mail = $this->findMail($id);
-
         $body = $desencriptar($mail['body'], $clave, $mail['iv']);
 
-        return $body;
+        }catch(Exception $e){
+            return ["msg"=> $e->getMessage(), "isDescrypted"=>true];
+        }
+
+        return ["body"=>$body, "msg"=>"Desencriptado", "isDescrypted"=>true];
     }
 }

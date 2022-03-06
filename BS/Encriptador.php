@@ -1,7 +1,7 @@
 <?php
 
 //Metodo de encriptación
-$method = 'aes-256-cbc';
+$method = 'AES-256-CBC';
 
 //Encripta el mensaje
 $encriptar = function ($msg, $clave, $iv) use ($method) {
