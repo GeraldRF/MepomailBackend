@@ -9,7 +9,7 @@ RewriteRule ^usuario/([A-Za-z\d[:punct:]]+)$ /Controllers/UserController.php?ema
 
 RewriteRule ^login$ /Controllers/LoginController.php
 
-RewriteRule ^correos$ /Controllers/UserController.php
-RewriteRule ^correo/([A-Za-z\d]+)$ /Controllers/UserController.php?id=$1
+RewriteRule ^correos$ /Controllers/MailController.php
+RewriteRule ^correo/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
 
 RewriteRule ^desencriptar/([A-Za-z\d]+)$ /Controllers/DecryptController.php?id=$1
