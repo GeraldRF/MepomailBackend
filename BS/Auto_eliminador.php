@@ -2,19 +2,37 @@
 
 include_once "../BS/MailServices.php";
 
-$Services = new MailServices();
+if (!isset($Services)) {
 
-$mails = $Services->getAllMails();
+    $Services = new MailServices();
 
-$date = new DateTime();
+    $mails = $Services->getAllMails();
 
-foreach ($mails as $mail) {
+    $date = new DateTime();
 
-    $delete_date = new DateTime($mail['delete_date']);
+    foreach ($mails as $mail) {
 
-    if ($delete_date <= $date) {
-        //echo "El correo con id " . $mail['id'] . " sera eliminado por fecha <br>"; //Para debuggear
-        $Services->DeleteMail($mail['id']);
+        $delete_date = new DateTime($mail['delete_date']);
+
+        if ($delete_date <= $date) {
+            //echo "El correo con id " . $mail['id'] . " sera eliminado por fecha <br>"; //Para debuggear
+            $Services->DeleteMail($mail['id']);
+        }
     }
 
+    exit();
+} else {
+    $mails = $Services->getAllMails();
+
+    $date = new DateTime();
+
+    foreach ($mails as $mail) {
+
+        $delete_date = new DateTime($mail['delete_date']);
+
+        if ($delete_date <= $date) {
+            //echo "El correo con id " . $mail['id'] . " sera eliminado por fecha <br>"; //Para debuggear
+            $Services->DeleteMail($mail['id']);
+        }
+    }
 }
