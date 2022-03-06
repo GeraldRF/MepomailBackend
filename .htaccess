@@ -4,4 +4,6 @@ php_value date.timezone America/Ecuador
 
 RewriteEngine on
 
-RewriteRule ^login/$ /Controllers/UsersController.php?Login=1
+RewriteRule ^usuarios$ /Controllers/UserController.php
+RewriteRule ^login$ /Controllers/UserController.php?Login=1
+RewriteRule ^usuarios/([A-Za-z\d[:punct:]]+)$ /Controllers/UserController.php?email=$1
