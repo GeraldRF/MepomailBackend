@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 // Crear un nuevo user
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['email']) && !isset($_GET['Login'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['email'])) {
 
     $input = $_POST;
 
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 
 //Actualizar
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['email']) && !isset($_GET['Login'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['email'])) {
 
     $input = $_POST;
 
@@ -78,24 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['email']) && !isset($_GE
     } else {
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);   
-    }
-
-    exit();
-}
-
-// LOGUEARSE
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['Login'])) {
-
-    $response = $Services->checkUserLogin($_POST["email"], $_POST["password"]);
-
-    if ($response["isVerified"]) {
-
-        header("HTTP/1.1 200 OK");
-        echo json_encode($response["user"]);
-
-    } else {
-        header("HTTP/1.1 400 Bad Request");
-        echo json_encode($response["msg"]);
     }
 
     exit();

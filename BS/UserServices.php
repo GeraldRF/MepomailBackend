@@ -1,6 +1,6 @@
 <?php
 
-class userservices
+class UserServices
 {
     public $dbConn;
 
