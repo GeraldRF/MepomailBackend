@@ -72,8 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['id'])) {
         header("HTTP/1.1 200 OK");
         echo json_encode("Mensaje enviado correctamente.");
     } else {
+
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);
+        
     }
 
     exit();

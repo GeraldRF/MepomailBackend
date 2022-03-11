@@ -61,7 +61,7 @@ class MailServices
         return  $sql->fetchAll();
     }
 
-    
+
 
     function deleteMail($id)
     {
@@ -90,7 +90,7 @@ class MailServices
             $result = $this->findMail($id_generated);
 
             if (!isset($result['id'])) {
-                    $acepted_id = true;
+                $acepted_id = true;
             }
         } while (!$acepted_id);
 
@@ -105,20 +105,43 @@ class MailServices
         try {
 
             $statement = $this->dbConn->prepare($sql);
-            $statement->bindValue(":id", $id_generated);
-            $statement->bindValue(":iv", $iv);
-            $statement->bindValue(":transmitter", $input['transmitter']);
-            $statement->bindValue(":receiver", $input['receiver']);
-            $statement->bindValue(":subject", $input['subject']);
-            $statement->bindValue(":body", $body);
-            $statement->bindValue(":has_files", $input['has_files']);
-            $statement->bindValue(":delete_date", $input['delete_date']);
 
-            $statement->execute();
+            if (!empty($_FILES['file'])) {
+                $has_file = 1;
+            } else {
+                $has_file = 0;
+            }
+
+            if ($has_file === 1) {
+                $file_uploaded = $this->setFile($id_generated);
+                if (!$file_uploaded['isUploaded']) {
+                    throw new PDOException('Fallo al subir archivo');
+                };
+            }
+
+            $statement->execute(array(
+                ':id' => $id_generated, ':iv' => $iv, ':transmitter' => $input['transmitter'], ':receiver' => $input['receiver'],
+                ':subject' => $input['subject'], ':body' => $body, ':has_files' => $has_file, ':delete_date' => $input['delete_date']
+            ));
+
+
+            $id =  $id_generated.$_FILES['file']['name'];
+
+            $sql = "INSERT INTO files 
+                (id, mail_id, uri)
+                VALUES
+                (:id, :mail_id, :uri)";
+
+
+            $statement = $this->dbConn->prepare($sql);
+
+            $statement->execute(array(
+                ':id' => $id, ':mail_id' => $id_generated, ':uri' => 'Uploads/'.$id
+            ));
 
             return ["isCreated" => true];
         } catch (PDOException $exception) {
-
+            unlink($file_uploaded['ruta']);
             return ["isCreated" => false, "msg" => $exception->getMessage()];
         }
     }
@@ -150,15 +173,37 @@ class MailServices
     {
         include "Encriptador.php";
 
-        try{
+        try {
 
-        $mail = $this->findMail($id);
-        $body = $desencriptar($mail['body'], $clave, $mail['iv']);
-
-        }catch(Exception $e){
-            return ["msg"=> $e->getMessage(), "isDescrypted"=>false];
+            $mail = $this->findMail($id);
+            $body = $desencriptar($mail['body'], $clave, $mail['iv']);
+        } catch (Exception $e) {
+            return ["msg" => $e->getMessage(), "isDescrypted" => false];
         }
 
-        return ["body"=>$body, "msg"=>"Desencriptado", "isDescrypted"=>true];
+        return ["body" => $body, "msg" => "Desencriptado", "isDescrypted" => true];
+    }
+
+    function getFile($id)
+    {
+        $sql = $this->dbConn->prepare("SELECT * FROM files WHERE mail_id=:id");
+        $sql->bindValue(':id', $id);
+        $sql->execute();
+
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function setFile($mail_id)
+    {
+
+        $ruta_upload = '../Uploads/';
+
+        $subir_archivo = $ruta_upload . $mail_id . basename($_FILES['file']['name']);
+
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $subir_archivo)) {
+            return ['isUploaded'=>true, 'ruta' => $subir_archivo];
+        } else {
+            return ['isUploaded'=>false];
+        }
     }
 }
