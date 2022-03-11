@@ -19,5 +19,5 @@ RewriteRule ^revisar/([A-Za-z\d]+)$ /Controllers/DecryptController.php?id=$1&rev
 
 RewriteRule ^auto_delete$ /BS/Auto_eliminador.php
 
-RewriteRule ^download/([A-Za-z\d[:punct:]]+)$ /Uploads/$1
+RewriteRule ^download/([A-Za-z\d[:punct:][:space:]]+)$ /Uploads/$1
 
