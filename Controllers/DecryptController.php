@@ -38,14 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['revisar'])) {
     if ($mail['has_files'] == 1) {
         $fileData = $Services->getFile($mail['id']);
        // $file = fopen('../' . $fileData['uri'], 'r');
+       $data = ['body' =>$response["body"], 'file_id' => $fileData['id']];
+    }else {
+        $data = ['body' =>$response["body"]];
     }
-
 
     if ($response["isDescrypted"]) {
         header("HTTP/1.1 200 OK");
         $Services->updateMail($_GET['id'], ['readed' => 1]);
 
-        echo json_encode(['body' => $response["body"], 'file_id' => $fileData['id']]);
+        echo json_encode($data);
     } else {
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);
@@ -64,11 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['revisar'])) {
     if ($mail['has_files'] == 1) {
         $fileData = $Services->getFile($mail['id']);
        // $file = fopen('../' . $fileData['uri'], 'r');
+       $data = ['body' =>$response["body"], 'file_id' => $fileData['id']];
+    }else {
+        $data = ['body' =>$response["body"]];
     }
 
     if ($response["isDescrypted"]) {
         header("HTTP/1.1 200 OK");
-        echo json_encode(['body' =>$response["body"], 'file_id' => $fileData['id']]);
+        echo json_encode($data);
     } else {
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);
