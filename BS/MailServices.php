@@ -66,6 +66,15 @@ class MailServices
     function deleteMail($id)
     {
         try {
+
+            $fileData =  $this->getFile($id);
+
+            $File_id = $fileData['id'];
+
+            if($this->deleteFile($id)){
+             unlink('../Uploads/'.$File_id);
+            }
+
             $statement = $this->dbConn->prepare("DELETE FROM mails WHERE id=:id");
             $statement->bindValue(':id', $id);
             $statement->execute();
