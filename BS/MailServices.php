@@ -206,4 +206,16 @@ class MailServices
             return ['isUploaded'=>false];
         }
     }
+
+    function deleteFile($mail_id){
+       try{
+        $sql = $this->dbConn->prepare("DELETE FROM files WHERE mail_id=:id");
+        $sql->bindValue(':id', $mail_id);
+        $sql->execute();
+
+       return true;
+       }catch(PDOException $e){
+        return false;
+       }
+    }
 }

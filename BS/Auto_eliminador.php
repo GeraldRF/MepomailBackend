@@ -16,6 +16,15 @@ if (!isset($Services)) {
 
         if ($delete_date <= $date) {
             //echo "El correo con id " . $mail['id'] . " sera eliminado por fecha <br>"; //Para debuggear
+
+            $fileData =  $Services->getFile($mail['id']);
+
+            $id = $fileData['id'];
+
+            if($Services->deleteFile($mail['id'])){
+             unlink('../Uploads/'.$id);
+            }
+
             $Services->DeleteMail($mail['id']);
         }
     }
@@ -32,6 +41,14 @@ if (!isset($Services)) {
 
         if ($delete_date <= $date) {
             //echo "El correo con id " . $mail['id'] . " sera eliminado por fecha <br>"; //Para debuggear
+            $fileData =  $Services->getFile($mail['id']);
+
+            $id = $fileData['id'];
+
+            if($Services->deleteFile($mail['id'])){
+             unlink('../Uploads/'.$id);
+            }
+
             $Services->DeleteMail($mail['id']);
         }
     }
