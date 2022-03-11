@@ -177,11 +177,17 @@ class MailServices
 
             $mail = $this->findMail($id);
             $body = $desencriptar($mail['body'], $clave, $mail['iv']);
+            if($body != ''){
+            return ["body" => $body, "msg" => "Desencriptado", "isDescrypted" => true];
+            }
+            else {
+                throw new Exception('Error al desencriptar, revise la clave.');
+            }
         } catch (Exception $e) {
             return ["msg" => $e->getMessage(), "isDescrypted" => false];
         }
 
-        return ["body" => $body, "msg" => "Desencriptado", "isDescrypted" => true];
+        
     }
 
     function getFile($id)
