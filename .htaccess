@@ -2,6 +2,10 @@ php_value display_errors On
 php_value mbstring.http_input auto
 php_value date.timezone America/Guayaquil
 
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET,PUT,POST,DELETE"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
 RewriteEngine on
 
 RewriteRule ^usuarios$ /Controllers/UserController.php
