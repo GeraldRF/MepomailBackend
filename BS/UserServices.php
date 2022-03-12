@@ -91,12 +91,13 @@ class UserServices
 
         $sql = "UPDATE users
           SET $fields
-          WHERE email='$email'";
+          WHERE email=:emailAnt";
 
         try {
 
             $statement = $this->dbConn->prepare($sql);
             bindAllValues($statement, $input);
+            $statement->bindValue(":emailAnt", $email);
 
             $statement->execute();
 
