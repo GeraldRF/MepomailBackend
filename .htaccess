@@ -15,6 +15,7 @@ RewriteRule ^login$ /Controllers/LoginController.php
 
 RewriteRule ^correos$ /Controllers/MailController.php
 RewriteRule ^correos/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1
+RewriteRule ^correos/eliminar/([A-Za-z\d]+)$ /Controllers/MailController.php?id=$1&e=1
 
 RewriteRule ^correos/(recibidos|enviados)/([A-Za-z\d[:punct:]]+)$ /Controllers/MailController.php?solicitud=$1&email=$2
 

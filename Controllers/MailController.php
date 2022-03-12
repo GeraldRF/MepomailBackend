@@ -6,18 +6,19 @@ header("Access-Control-Allow-Headers: X-Requested-With, X-Custom-Header, Authori
 
 //Revisar autheticacion
 $headers = getallheaders();
-if (isset($headers["Authorization"])) {
-    $token = $headers["Authorization"];
-    if (explode(" ", $token)[1] != "$2y$10\$GwGaUqJK3uPib0iaxS6B9u2uLXh6z4Fok3hGec1/wwfAmFNazXB7.") {
+    if (isset($headers["Authorization"])) {
+        $token = $headers["Authorization"];
+        if (explode(" ", $token)[1] != "$2y$10\$GwGaUqJK3uPib0iaxS6B9u2uLXh6z4Fok3hGec1/wwfAmFNazXB7.") {
+            header("HTTP/1.1 401 Unauthorized");
+            echo "<h1 style=\"width:95%; text-align:center; color:red; padding:40px; background-color:#ff03033b;\">Acceso no autorizado, token equivocado</h1>";
+            exit();
+        }
+    } else {
         header("HTTP/1.1 401 Unauthorized");
-        echo "<h1 style=\"width:95%; text-align:center; color:red; padding:40px; background-color:#ff03033b;\">Acceso no autorizado</h1>";
+        echo "<h1 style=\"width:95%; text-align:center; color:red; padding:40px; background-color:#ff03033b;\">Acceso no autorizado, no se evaluo el token</h1>";
         exit();
     }
-} else {
-    header("HTTP/1.1 401 Unauthorized");
-    echo "<h1 style=\"width:95%; text-align:center; color:red; padding:40px; background-color:#ff03033b;\">Acceso no autorizado</h1>";
-    exit();
-}
+
 
 
 include_once "../BS/MailServices.php";
@@ -27,7 +28,7 @@ $Services = new MailServices();
 /*
   listar todos los Mail o solo uno
  */
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($_GET['e'])) {
 
     include("../BS/Auto_eliminador.php");
 
@@ -75,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['id'])) {
 
         header("HTTP/1.1 400 Bad Request");
         echo json_encode($response["msg"]);
-        
     }
 
     exit();
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_GET['id'])) {
 
 
 //Desactivar | Borrar
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['e'])) {
 
     $isDeleted = $Services->DeleteMail($_GET['id']);
 

@@ -69,11 +69,17 @@ class MailServices
 
             $fileData =  $this->getFile($id);
 
-            $File_id = $fileData['id'];
+            if (!empty($fileData)) {
 
-            if($this->deleteFile($id)){
-             unlink('../Uploads/'.$File_id);
+                $File_id = $fileData['id'];
+
+                if ($this->deleteFile($id)) {
+                    unlink('../Uploads/' . $File_id);
+                }
+                
             }
+
+
 
             $statement = $this->dbConn->prepare("DELETE FROM mails WHERE id=:id");
             $statement->bindValue(':id', $id);
@@ -115,7 +121,7 @@ class MailServices
 
             $statement = $this->dbConn->prepare($sql);
 
-            if (!empty($_FILES['file'])) {
+            if (!empty($_FILES['file']['name'])) {
                 $has_file = 1;
             } else {
                 $has_file = 0;
@@ -134,7 +140,7 @@ class MailServices
             ));
 
 
-            $id =  $id_generated.$_FILES['file']['name'];
+            $id =  $id_generated . $_FILES['file']['name'];
 
             $sql = "INSERT INTO files 
                 (id, mail_id, uri)
@@ -145,7 +151,7 @@ class MailServices
             $statement = $this->dbConn->prepare($sql);
 
             $statement->execute(array(
-                ':id' => $id, ':mail_id' => $id_generated, ':uri' => 'Uploads/'.$id
+                ':id' => $id, ':mail_id' => $id_generated, ':uri' => 'Uploads/' . $id
             ));
 
             return ["isCreated" => true];
@@ -186,17 +192,14 @@ class MailServices
 
             $mail = $this->findMail($id);
             $body = $desencriptar($mail['body'], $clave, $mail['iv']);
-            if($body != ''){
-            return ["body" => $body, "msg" => "Desencriptado", "isDescrypted" => true];
-            }
-            else {
+            if ($body != '') {
+                return ["body" => $body, "msg" => "Desencriptado", "isDescrypted" => true];
+            } else {
                 throw new Exception('Error al desencriptar, revise la clave.');
             }
         } catch (Exception $e) {
             return ["msg" => $e->getMessage(), "isDescrypted" => false];
         }
-
-        
     }
 
     function getFile($id)
@@ -216,21 +219,22 @@ class MailServices
         $subir_archivo = $ruta_upload . $mail_id . basename($_FILES['file']['name']);
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $subir_archivo)) {
-            return ['isUploaded'=>true, 'ruta' => $subir_archivo];
+            return ['isUploaded' => true, 'ruta' => $subir_archivo];
         } else {
-            return ['isUploaded'=>false];
+            return ['isUploaded' => false];
         }
     }
 
-    function deleteFile($mail_id){
-       try{
-        $sql = $this->dbConn->prepare("DELETE FROM files WHERE mail_id=:id");
-        $sql->bindValue(':id', $mail_id);
-        $sql->execute();
+    function deleteFile($mail_id)
+    {
+        try {
+            $sql = $this->dbConn->prepare("DELETE FROM files WHERE mail_id=:id");
+            $sql->bindValue(':id', $mail_id);
+            $sql->execute();
 
-       return true;
-       }catch(PDOException $e){
-        return false;
-       }
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }
